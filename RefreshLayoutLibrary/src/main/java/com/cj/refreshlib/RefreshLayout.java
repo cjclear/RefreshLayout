@@ -19,7 +19,7 @@ public class RefreshLayout extends FrameLayout {
     private int offset, loadOffset,offsetCount,lastCount;
     private Scroller scroller;
     private LoadInterface loadInterface;
-    private boolean isLoading = false ;
+    private boolean isLoading = false,isDisabled = false ;
     private float oldx,oldy;
 
     public void setLoadInterface(LoadInterface loadInterface) {
@@ -108,6 +108,10 @@ public class RefreshLayout extends FrameLayout {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
+    public void disableRefresh(){
+        isDisabled = true;
+    }
+
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         if (getChildCount() == 2) {
@@ -133,10 +137,14 @@ public class RefreshLayout extends FrameLayout {
 
     boolean isMoving = false;
 
+    public void setOffset(int offset) {
+        this.offset = offset;
+        requestLayout();
+    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (getChildCount() == 2) {
+        if (getChildCount() == 2 && !isDisabled) {
             View view =  getChildAt(1);
             switch (event.getAction()) {
                 case MotionEvent.ACTION_CANCEL:
